@@ -1,20 +1,43 @@
 import React, { useState } from 'react'; 
 import { useCart } from "../CartContext";
+import { supabase } from '../../supabaseClient'; 
+import { useAuth } from "../AuthContext";
 
 const CartModal = () => {
+
+ 
   const { cart, removeFromCart, totalBill } = useCart();
-  
+
+  const { user } = useAuth();
   const [showNotification, setShowNotification] = useState(false);
 
   
-  const handleCheckout = () => {
-    setShowNotification(true);
-    
-    setTimeout(() => {
-      setShowNotification(false);
-    }, 3000);
+  const handleCheckout = async () => {
+if (!user) {
+      alert("Pehle Login karein!");
+      return;
+    }
+
+
+    const { error } = await supabase
+      .from('Orders')
+      .insert([{ 
+         total_bill: totalBill,
+         name: user.name,
+         phone: user.phone
+      }]);
+      
+
+    if (error) {
+      console.error("Database Error:", error.message);
+      alert("Order save nahi hua.");
+    } else {
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 3000);
+    }
   };
 
+  
   if (cart.length === 0) {
     return (
       <div style={styles.emptyCart}>
@@ -28,9 +51,10 @@ const CartModal = () => {
     <div style={styles.cartContainer}>
       {showNotification && (
         <div style={styles.customToast}>
-         Order Placed Successfully! Total: Rs. {totalBill}
+          Order Placed Successfully! Total: Rs. {totalBill}
         </div>
       )}
+      
 <h3 style={styles.cartTitle}>Shopping Cart Summary</h3>
   <div style={styles.itemList}>
   {cart.map((item) => (
@@ -114,5 +138,4 @@ const styles = {
   checkoutBtn:
    { width: '100%', backgroundColor: '#0a3013', color: '#fff', border: 'none', padding: '12px', borderRadius: '6px', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold' }
 };
-
 export default CartModal;

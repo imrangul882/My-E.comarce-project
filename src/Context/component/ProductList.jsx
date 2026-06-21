@@ -38,7 +38,7 @@ const ProductList = () => {
     { 
       id: 5, 
       name: "Rooh Afza (750ml)", 
-      price: 320, 
+      price: 434, 
       desc: "Refreshing Drink, Traditional Sharbat, Perfect for Summer.", 
       image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_WQDPO3XNzA43B-2JWieUsitx1rRv1zmotR2fbQiIeK3_Nih7dDjyAKBK&s=10" 
     },
