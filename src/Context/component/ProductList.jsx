@@ -1,12 +1,24 @@
 import { useNavigate } from "react-router-dom";
-
-import React from 'react';
+import React, { useState, useEffect } from 'react'; // 1. Yahan useState aur useEffect add kiya
 import { useCart } from '../CartContext';
+import { supabase } from '../../supabaseClient';// 2. Yahan supabase client ko import kiya
 
 const ProductList = () => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
- const GROCERY_CATALOG = [
+
+  // 3. YAHAN PAR YEH CODE LAGAYEIN (Component ke andar, catalog se ooper)
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Yeh automatic check karega ke abhi kaunsa user login hai
+    supabase.auth.getUser().then(({ data }) => {
+      if (data?.user) {
+        setUser(data.user);
+      }
+    });
+  }, []);
+   const GROCERY_CATALOG = [
     { 
       id: 1, 
       name: "National Chat Masala", 

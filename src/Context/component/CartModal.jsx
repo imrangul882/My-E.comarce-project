@@ -11,32 +11,40 @@ const CartModal = () => {
   const { user } = useAuth();
   const [showNotification, setShowNotification] = useState(false);
 
-  
-  const handleCheckout = async () => {
-if (!user) {
-      alert("Pehle Login karein!");
-      return;
+  const handlePlaceOrder = async () => {
+  if (!cart || cart.length === 0) {
+    alert("Aapka cart khali hai!");
+    return;
+  }
+  console.log("Placing order for user:", user);
+  const productNames = cart.map(item => item.name || "Unknown Product").join(", ");
+  const imageUrls = cart.map(item => item.image_url || item.image || "").join(", ");
+  try {
+const { data, error } = await supabase
+.from('orders')
+.insert([
+{
+ user_name: user?.name || "Walk-in Customer", 
+phone: user?.phone || "0000000000",
+product_name: productNames,
+total_bill: totalBill || 0, 
+image_url: imageUrls
+}
+]);
+if (error) {
+      throw error;
     }
+  console.log("Order successfully saved!", data);
+setShowNotification(true);
+setTimeout(() => {
+  setShowNotification(false);
+}, 5000);
 
-
-    const { error } = await supabase
-      .from('Orders')
-      .insert([{ 
-         total_bill: totalBill,
-         name: user.name,
-         phone: user.phone
-      }]);
-      
-
-    if (error) {
-      console.error("Database Error:", error.message);
-      alert("Order save nahi hua.");
-    } else {
-      setShowNotification(true);
-      setTimeout(() => setShowNotification(false), 3000);
-    }
-  };
-
+  } catch (error) {
+    console.error("Order save karne mein error aya:", error.message);
+    alert("Order fail ho gaya: " + error.message);
+  }
+};
   
   if (cart.length === 0) {
     return (
@@ -74,9 +82,32 @@ if (!user) {
   <span>Total Payable Bill:</span>
   <span style={styles.billAmount}>Rs {totalBill}</span>
   </div>
-  <button style={styles.checkoutBtn} onClick={handleCheckout}>
-  Proceed to Checkout
-  </button>
+
+<button onClick={handlePlaceOrder} style={{ backgroundColor: '#007bff', color: '#fff', border: 'none', padding: '8px 12px', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}>
+  Place Order
+</button>
+
+{showNotification && (
+  <div style={{
+    position: 'fixed',
+    top: '20px',
+    right: '20px',
+    backgroundColor: '#8f12f5', 
+    color: '#e5dfee',           // Bright Yellow Text
+    padding: '16px 28px',
+    borderRadius: '12px',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3)',
+    zIndex: 9999,               
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    transition: 'all 0.3s ease',
+    border: '2px solid ' 
+  }}>
+  </div>
+)}
   </div>
   );
 };

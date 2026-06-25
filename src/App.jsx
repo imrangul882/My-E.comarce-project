@@ -18,31 +18,52 @@ function MainLayout() {
   {isLoggedIn ? (
     <div style={{ padding: '20px', maxWidth: '1200px', width: '100%', margin: '0 auto' }}>
   <Routes>
-        <Route 
-            path="/" 
-            element={
-              <>
-  <ProductList />
-  <CartModal />
-              </>
-              }/>
+  
+  <Route 
+    path="/" 
+    element={
+      <>
+        <ProductList />
+        <CartModal />
+      </>
+    } 
+  />
+  <Route 
+    path="/" 
+    element={
+      <>
+        <ProductList />
+        <CartModal />
+      </>
+    } 
+  />
+  <Route 
+    path="*" 
+    element={
+      <>
+<ProductList />
+<CartModal />
+</>
+} 
+ />
+
   <Route path="/product-details" element={<ProductDetailsPage />} />
-        </Routes>
+</Routes> 
  </div>
       ) : (
   <div style={styles.heroContainer}>
-          <div style={styles.heroCard}>
-            <div style={styles.badge}>🇵🇰 Pakistan's Premium Grocery</div>
-            <h1 style={styles.mainHeading}>Bachaen Waqt Aur Paisa!</h1>
-            <p style={styles.subHeading}>
-              Get fresh fruits, authentic spices, and daily household essentials delivered straight from HAYDERABAD's best markets to your doorstep.
-            </p>
-            <div style={styles.featuresRow}>
-              <div style={styles.featureItem}> Fast Delivery</div>
-              <div style={styles.featureItem}>100% Fresh Items</div>
-              <div style={styles.featureItem}>Best Wholesale Prices</div>
-            </div>  
-        <div style={styles.alertBox}>
+  <div style={styles.heroCard}>
+ <div style={styles.badge}>🇵🇰 Pakistan's Premium Grocery</div>
+<h1 style={styles.mainHeading}>Bachaen Waqt Aur Paisa!</h1>
+<p style={styles.subHeading}>
+Get fresh fruits, authentic spices, and daily household essentials delivered straight from HAYDERABAD's best markets to your doorstep.
+</p>
+<div style={styles.featuresRow}>
+<div style={styles.featureItem}> Fast Delivery</div>
+<div style={styles.featureItem}>100% Fresh Items</div>
+<div style={styles.featureItem}>Best Wholesale Prices</div>
+</div>  
+<div style={styles.alertBox}>
   <b>Account Protected:</b> Please click the <b>Login</b> button on top to unlock the storefront and start shopping.
    </div>
     </div>
